@@ -10,9 +10,9 @@ jobs:
       with:
         java-version: 1.8
 
-    - uses: ViliusSutkus89/setup-android@release
+    #- uses: ViliusSutkus89/setup-android@release
  
-    - run: ./gradlew build
+    #- run: ./gradlew build
 
     - name: run tests
       uses: reactivecircus/android-emulator-runner@v2
