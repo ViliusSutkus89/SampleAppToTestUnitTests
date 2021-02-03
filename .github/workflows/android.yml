@@ -12,4 +12,8 @@ jobs:
 
     - uses: ViliusSutkus89/setup-android@release
 
+    - run: sdkmanager "cmdline-tools;latest"
+      
+    - run: sdkmanager "cmdline-tools;3.0"
+      
     - run: ./gradlew build
