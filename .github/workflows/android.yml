@@ -43,8 +43,6 @@ jobs:
 
       - uses: ViliusSutkus89/setup-android@release
 
-      - run: sdkmanager emulator
-
       - uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
