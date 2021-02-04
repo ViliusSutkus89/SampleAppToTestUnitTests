@@ -2,7 +2,7 @@ name: android
 on: push
 jobs:
   build:
-    runs-on: macos-10.15
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
 
@@ -11,13 +11,38 @@ jobs:
         java-version: 1.8
 
     - uses: ViliusSutkus89/setup-android@release
-    
-    - run: sdkmanager emulator
- 
-    - run: ./gradlew build
 
-    - name: run tests
-      uses: reactivecircus/android-emulator-runner@v2
+    - run: ./gradlew assembleRelease
+
+    - run: ./gradlew publishToMavenLocal
+
+    - uses: actions/upload-artifact@v2
       with:
-        api-level: 29
-        script: ./gradlew connectedCheck
+        name: maven-local
+        path: ~/.m2
+
+  runInstrumentedTests:
+    needs: build
+    runs-on: macos-10.15
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: maven-local
+          path: ~/.m2
+
+      - run: .github/do-prepare-aar-instrumented-tests
+
+      - uses: ViliusSutkus89/setup-android@release
+
+      - run: sdkmanager emulator
+
+      - uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          script: ./gradlew aar-instrumented-tests:connectedCheck
