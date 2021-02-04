@@ -36,7 +36,7 @@ jobs:
 #          name: maven-local
 #          path: ~/.m2
 
-      - run: readlink --help
+      - run: readlink -h
       - run: .github/do-prepare-aar-instrumented-tests
 
 #      - uses: ViliusSutkus89/setup-android@release
