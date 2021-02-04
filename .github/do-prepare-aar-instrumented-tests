@@ -18,12 +18,15 @@ PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 BASEDIR=$(dirname "$0")/..
 cd $BASEDIR
 
+echo "Updating top level settings.gradle"
+sed -i -E "s/include(.*)/include\1, ':aar-instrumented-tests'/g" ./settings.gradle
+#@TODO: STAGING
+cat ./settings.gradle
+
+echo "Updating top level build.gradle"
 sed -i -E "s/repositories \{/repositories \{\nmavenLocal()/g" ./build.gradle
 #@TODO: STAGING
 cat ./build.gradle
-
-sed -i -E "s/include(.*)/include\1, ':aar-instrumented-tests'/g" ./settings.gradle
-cat ./settings.gradle
 
 DST=./aar-instrumented-tests
 function copy() {
@@ -35,17 +38,21 @@ function copy() {
 }
 
 copy build.gradle
+echo "Updating module level build.gradle"
 sed -i -E "s/dependencies \{/dependencies \{\n implementation '${GROUP_ID_ARTIFACT_ID}:+'/g" $DST/build.gradle
 #@TODO: STAGING
 cat $DST/build.gradle
 
 copy src/main/AndroidManifest.xml
+echo "Updating AndroidManifest.xml"
 sed -i-E "s/package\=\"(.*)\"/package\=\"\1.aarinstrumentedtests\"/g" $DST/src/main/AndroidManifest.xml
 #@TODO: STAGING
 cat $DST/src/main/AndroidManifest.xml
 
 copy src/androidTest
+echo "Updating java files"
 find $DST/src/androidTest -type f -name '*.java' -exec sed -i -E "s/package (.*)\;/package \1.aarinstrumentedtests\;\nimport \1\.\*\;/g" {} \;
+find $DST/src/androidTest -type f -name '*.java' -exec cat {} \;
 
 mkdir $DST/src/androidTest/java/$PACKAGE_FOLDER_PATH/aarinstrumentedtests
 find $DST/src/androidTest/java/$PACKAGE_FOLDER_PATH -type f -name '*.java' -exec mv {} $DST/src/androidTest/java/$PACKAGE_FOLDER_PATH/aarinstrumentedtests/ \;
