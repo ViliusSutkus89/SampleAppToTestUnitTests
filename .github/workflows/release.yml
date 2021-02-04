@@ -9,8 +9,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - run: ls -lhaR ~/.m2 || true
-
     - uses: actions/download-artifact@v2
       with:
         name: maven-local
