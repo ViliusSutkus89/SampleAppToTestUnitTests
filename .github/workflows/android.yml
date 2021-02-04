@@ -2,7 +2,6 @@ name: android
 on: push
 jobs:
   build:
-#    if: false
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
@@ -28,25 +27,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        api-level: [16]
-        arch: [x86]
-#        api-level: [16, 21, 30]
-#        arch: [x86, x86_64]
+        api-level: [16, 21, 30]
+        arch: [x86, x86_64]
         target: [default]
-
-#        include:
-#          - api-level: 30
-#            arch: x86
-#            target: google_apis
-#          - api-level: 30
-#            arch: x86_64
-#            target: google_apis
-#
-#        exclude:
-#          - api-level: 16
-#            arch: x86_64
-#          - api-level: 30
-#            target: default
+        include:
+          - api-level: 30
+            arch: x86
+            target: google_apis
+          - api-level: 30
+            arch: x86_64
+            target: google_apis
+        exclude:
+          - api-level: 16
+            arch: x86_64
+          - api-level: 30
+            target: default
 
     steps:
       - uses: actions/checkout@v2
@@ -57,9 +52,6 @@ jobs:
 
       - uses: ViliusSutkus89/setup-android@release
 
-#      - run: ./gradlew assembleRelease
-#      - run: ./gradlew publishToMavenLocal
-
       - run: sdkmanager "system-images;android-${{ matrix.api-level }};${{ matrix.target }};${{ matrix.arch }}"
 
       - uses: actions/download-artifact@v2
@@ -68,9 +60,6 @@ jobs:
           path: ~/.m2
 
       - run: .github/do-prepare-aar-instrumented-tests
-
-#      - run: ./gradlew aar-instrumented-tests:build
-#      - run: ./gradlew aar-instrumented-tests:connectedCheck
 
       - uses: reactivecircus/android-emulator-runner@v2
         with:
