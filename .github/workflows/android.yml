@@ -24,6 +24,9 @@ jobs:
   runInstrumentedTests:
     needs: build
     runs-on: macos-10.15
+    strategy:
+      matrix:
+        api-level: [16, 30]
     steps:
       - uses: actions/checkout@v2
 
@@ -44,7 +47,7 @@ jobs:
 
       - uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
+          api-level: ${{ matrix.api-level }}
           target: google_apis
           script: ./gradlew aar-instrumented-tests:connectedCheck
 
