@@ -25,6 +25,7 @@ jobs:
         path: ~/.m2
 
   runInstrumentedTests:
+    if: false
     needs: build
     runs-on: macos-10.15
     strategy:
