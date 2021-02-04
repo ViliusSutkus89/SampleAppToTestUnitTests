@@ -12,8 +12,7 @@ PACKAGE_FOLDER_PATH="com/viliussutkus89/sampleapptotestunittests"
 ##### ~~~CONFIG~~~ ########
 ###########################
 
-THIS_FILE=$(readlink -f "$0")
-BASEDIR=$(readlink -f $(dirname "$THIS_FILE")/..)
+BASEDIR=$(dirname "$0")/..
 
 sed -E "/repositories \{/a \ \ \ \ \ \ \ \ mavenLocal()" -i $BASEDIR/build.gradle
 
