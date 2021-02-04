@@ -2,7 +2,7 @@ name: android
 on:
   push:
     paths-ignore:
-      - '.github/workflow/release.yml'
+      - '.github/workflows/release.yml'
 jobs:
   build:
     runs-on: ubuntu-20.04
