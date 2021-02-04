@@ -14,8 +14,8 @@ PACKAGE_FOLDER_PATH="com/viliussutkus89/sampleapptotestunittests"
 
 BASEDIR=$(dirname "$0")/..
 
-#cat $BASEDIR/build.gradle
-sed -E "/repositories/a mavenLocal/" $BASEDIR/build.gradle
+#cat $BASEDIR/build.gradle 
+sed -E "s/repositories /repositories mavenLocal/g" $BASEDIR/build.gradle
 #sed -i'.orig' -E "/repositories \{/a mavenLocal()" $BASEDIR/build.gradle
 #cat $BASEDIR/build.gradle
 exit 0
