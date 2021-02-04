@@ -24,7 +24,6 @@ jobs:
         name: maven-local
         path: ~/.m2
 
-
   runInstrumentedTests:
     if: false
     needs: build
