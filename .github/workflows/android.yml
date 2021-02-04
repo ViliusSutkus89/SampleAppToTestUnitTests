@@ -29,7 +29,16 @@ jobs:
       matrix:
         api-level: [16, 21, 30]
         arch: [x86, x86_64]
-#        target: [default, google_apis]
+        target: [default]
+
+        include:
+          - api-level: 30
+            target: google_apis
+
+        exclude:
+          - api-level: 16
+            arch: x86_64
+
     steps:
       - uses: actions/checkout@v2
 
