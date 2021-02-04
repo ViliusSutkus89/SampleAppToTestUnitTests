@@ -12,16 +12,20 @@ PACKAGE_FOLDER_PATH="com/viliussutkus89/sampleapptotestunittests"
 ##### ~~~CONFIG~~~ ########
 ###########################
 
+which sed
+brew install gnu-sed
+brew info gnu-sed
+which sed
+which gsed
+
 BASEDIR=$(dirname "$0")/..
 cd $BASEDIR
 
-sed -i'.orig' -E "s/repositories \{/repositories \{\nmavenLocal()/g" ./build.gradle
-rm ./build.gradle.orig
+sed -i -E "s/repositories \{/repositories \{\nmavenLocal()/g" ./build.gradle
 #@TODO: STAGING
 cat ./build.gradle
 
-sed -i'.orig' -E "s/include(.*)/include\1, ':aar-instrumented-tests'/g" ./settings.gradle
-rm ./settings.gradle.orig
+sed -i -E "s/include(.*)/include\1, ':aar-instrumented-tests'/g" ./settings.gradle
 cat ./settings.gradle
 
 DST=./aar-instrumented-tests
@@ -35,20 +39,17 @@ function copy() {
 
 
 copy build.gradle
-sed -i'.orig' -E "s/dependencies {/implementation { '${GROUP_ID_ARTIFACT_ID}:+'/g" $DST/build.gradle
-rm $DST/build.gradle.orig
+sed -i -E "s/dependencies {/implementation { '${GROUP_ID_ARTIFACT_ID}:+'/g" $DST/build.gradle
 #@TODO: STAGING
 cat $DST/build.gradle
 
 copy src/main/AndroidManifest.xml
-sed -i'.orig' -E "s/package\=\"(.*)\"/package\=\"\1.aarinstrumentedtests\"/g" $DST/src/main/AndroidManifest.xml
-rm $DST/src/main/AndroidManifest.xml.orig
+sed -i-E "s/package\=\"(.*)\"/package\=\"\1.aarinstrumentedtests\"/g" $DST/src/main/AndroidManifest.xml
 #@TODO: STAGING
 cat $DST/src/main/AndroidManifest.xml
 
 copy src/androidTest
-find $DST/src/androidTest -type f -name '*.java' -exec sed -i'.orig' -E "s/package (.*)\;/package \1.aarinstrumentedtests\;\nimport \1\.\*\;/g" {} \;
-find $DST/src/androidTest -type f -name '*.java.orig' -exec rm {} \;
+find $DST/src/androidTest -type f -name '*.java' -exec sed -i -E "s/package (.*)\;/package \1.aarinstrumentedtests\;\nimport \1\.\*\;/g" {} \;
 
 mkdir $DST/src/androidTest/java/$PACKAGE_FOLDER_PATH/aarinstrumentedtests
 find $DST/src/androidTest/java/$PACKAGE_FOLDER_PATH -type f -name '*.java' -exec mv {} $DST/src/androidTest/java/$PACKAGE_FOLDER_PATH/aarinstrumentedtests/ \;
