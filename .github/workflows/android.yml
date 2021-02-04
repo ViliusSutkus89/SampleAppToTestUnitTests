@@ -42,6 +42,8 @@ jobs:
         exclude:
           - api-level: 16
             arch: x86_64
+          - api-level: 30
+            target: default
 
     steps:
       - uses: actions/checkout@v2
@@ -58,6 +60,7 @@ jobs:
           path: ~/.m2
 
       - uses: ViliusSutkus89/setup-android@release
+      - run: sdkmanager "system-images;android-${{ matrix.api-level }};${{ matrix.target }};${{ matrix.arch }}"
 
       - uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -65,4 +68,3 @@ jobs:
           arch: ${{ matrix.arch }}
           target: ${{ matrix.target }}
           script: ./gradlew aar-instrumented-tests:connectedCheck
-
