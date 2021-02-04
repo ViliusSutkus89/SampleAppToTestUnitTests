@@ -1,0 +1,19 @@
+name: release
+on:
+  release:
+    types: created
+
+jobs:
+  publishToMaven:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+
+    - run: ls -lhaR ~/.m2
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: maven-local
+        path: ~/.m2
+
+    - run: ls -lhaR ~/.m2
