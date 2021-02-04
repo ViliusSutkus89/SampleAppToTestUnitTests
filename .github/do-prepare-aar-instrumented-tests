@@ -14,7 +14,7 @@ PACKAGE_FOLDER_PATH="com/viliussutkus89/sampleapptotestunittests"
 
 which sed
 brew install gnu-sed
-brew info gnu-sed
+PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
 which sed
 which gsed
 
