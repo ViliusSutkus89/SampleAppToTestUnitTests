@@ -14,9 +14,8 @@ PACKAGE_FOLDER_PATH="com/viliussutkus89/sampleapptotestunittests"
 
 BASEDIR=$(dirname "$0")/..
 
-sed -E "/repositories \{/a mavenLocal()" -i $BASEDIR/build.gradle
-
-sed -E "s/include(.*)/include\1, ':aar-instrumented-tests'/g" -i $BASEDIR/settings.gradle
+sed -E "/repositories \{/a mavenLocal()" -i'.orig' $BASEDIR/build.gradle
+sed -E "s/include(.*)/include\1, ':aar-instrumented-tests'/g" -i'.orig' $BASEDIR/settings.gradle
 
 DST=$BASEDIR/aar-instrumented-tests
 function copy() {
@@ -28,13 +27,13 @@ function copy() {
 }
 
 copy build.gradle
-sed -E "/dependencies \{/a implementation '${GROUP_ID_ARTIFACT_ID}:+'" -i $DST/build.gradle
+sed -E "/dependencies \{/a implementation '${GROUP_ID_ARTIFACT_ID}:+'" -i'.orig' $DST/build.gradle
 
 copy src/main/AndroidManifest.xml
-sed -E "s/package\=\"(.*)\"/package\=\"\1.aarinstrumentedtests\"/g" -i $DST/src/main/AndroidManifest.xml
+sed -E "s/package\=\"(.*)\"/package\=\"\1.aarinstrumentedtests\"/g" -i'.orig' $DST/src/main/AndroidManifest.xml
 
 copy src/androidTest
-find $DST/src/androidTest -type f -name '*.java' -exec sed -E "s/package (.*)\;/package \1.aarinstrumentedtests\;\nimport \1\.\*\;/g" -i {} \;
+find $DST/src/androidTest -type f -name '*.java' -exec sed -E "s/package (.*)\;/package \1.aarinstrumentedtests\;\nimport \1\.\*\;/g" -i'.orig' {} \;
 
 mkdir $DST/src/androidTest/java/$PACKAGE_FOLDER_PATH/aarinstrumentedtests
 find $DST/src/androidTest/java/$PACKAGE_FOLDER_PATH -type f -name '*.java' -exec mv {} $DST/src/androidTest/java/$PACKAGE_FOLDER_PATH/aarinstrumentedtests/ \;
