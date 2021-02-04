@@ -12,11 +12,8 @@ PACKAGE_FOLDER_PATH="com/viliussutkus89/sampleapptotestunittests"
 ##### ~~~CONFIG~~~ ########
 ###########################
 
-which sed
 brew install gnu-sed
 PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
-which sed
-which gsed
 
 BASEDIR=$(dirname "$0")/..
 cd $BASEDIR
@@ -37,9 +34,8 @@ function copy() {
   cp -r ./$SOURCE_PROJ/$TARGET $DST_DIR/
 }
 
-
 copy build.gradle
-sed -i -E "s/dependencies {/implementation { '${GROUP_ID_ARTIFACT_ID}:+'/g" $DST/build.gradle
+sed -i -E "s/dependencies \{/dependencies \{\n implementation '${GROUP_ID_ARTIFACT_ID}:+'/g" $DST/build.gradle
 #@TODO: STAGING
 cat $DST/build.gradle
 
