@@ -16,6 +16,9 @@ BASEDIR=$(dirname "$0")/..
 
 sed -i'.orig' -E "s/repositories {/repositories { mavenLocal()/g" $BASEDIR/build.gradle
 sed -i'.orig' -E "s/include(.*)/include\1, ':aar-instrumented-tests'/g" $BASEDIR/settings.gradle
+#@TODO: STAGING
+cat $BASEDIR/build.gradle
+cat $BASEDIR/settings.gradle
 
 DST=$BASEDIR/aar-instrumented-tests
 function copy() {
@@ -28,9 +31,13 @@ function copy() {
 
 copy build.gradle
 sed -i'.orig' -E "s/dependencies {/implementation { '${GROUP_ID_ARTIFACT_ID}:+'/g" $DST/build.gradle
+#@TODO: STAGING
+cat $DST/build.gradle
 
 copy src/main/AndroidManifest.xml
 sed -i'.orig' -E "s/package\=\"(.*)\"/package\=\"\1.aarinstrumentedtests\"/g" $DST/src/main/AndroidManifest.xml
+#@TODO: STAGING
+cat $DST/src/main/AndroidManifest.xml
 
 copy src/androidTest
 find $DST/src/androidTest -type f -name '*.java' -exec sed -i'.orig' -E "s/package (.*)\;/package \1.aarinstrumentedtests\;\nimport \1\.\*\;/g" {} \;
