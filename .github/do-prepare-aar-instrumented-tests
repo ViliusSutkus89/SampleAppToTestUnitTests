@@ -45,7 +45,7 @@ cat $DST/build.gradle
 
 copy src/main/AndroidManifest.xml
 echo "Updating AndroidManifest.xml"
-sed -i-E "s/package\=\"(.*)\"/package\=\"\1.aarinstrumentedtests\"/g" $DST/src/main/AndroidManifest.xml
+sed -i -E "s/package\=\"(.*)\"/package\=\"\1.aarinstrumentedtests\"/g" $DST/src/main/AndroidManifest.xml
 #@TODO: STAGING
 cat $DST/src/main/AndroidManifest.xml
 
