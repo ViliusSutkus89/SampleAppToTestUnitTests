@@ -14,11 +14,7 @@ PACKAGE_FOLDER_PATH="com/viliussutkus89/sampleapptotestunittests"
 
 BASEDIR=$(dirname "$0")/..
 
-#cat $BASEDIR/build.gradle
-sed -i'.orig' -E "s/repositories {/repositories {\nmavenLocal()/g" $BASEDIR/build.gradle
-#sed -i'.orig' -E "/repositories \{/a mavenLocal()" $BASEDIR/build.gradle
-cat $BASEDIR/build.gradle
-exit 0
+sed -i'.orig' -E "s/repositories {/repositories { mavenLocal()/g" $BASEDIR/build.gradle
 sed -i'.orig' -E "s/include(.*)/include\1, ':aar-instrumented-tests'/g" $BASEDIR/settings.gradle
 
 DST=$BASEDIR/aar-instrumented-tests
@@ -31,7 +27,8 @@ function copy() {
 }
 
 copy build.gradle
-sed -i'.orig' -E "/dependencies \{/a implementation '${GROUP_ID_ARTIFACT_ID}:+'" $DST/build.gradle
+sed -i'.orig' -E "s/dependencies {/implementation { '${GROUP_ID_ARTIFACT_ID}:+'/g" $DST/build.gradle
+cat $DST/build.gradle
 
 copy src/main/AndroidManifest.xml
 sed -i'.orig' -E "s/package\=\"(.*)\"/package\=\"\1.aarinstrumentedtests\"/g" $DST/src/main/AndroidManifest.xml
