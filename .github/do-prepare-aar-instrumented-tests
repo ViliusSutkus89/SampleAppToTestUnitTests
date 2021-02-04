@@ -14,7 +14,11 @@ PACKAGE_FOLDER_PATH="com/viliussutkus89/sampleapptotestunittests"
 
 BASEDIR=$(dirname "$0")/..
 
-sed -i'.orig' -E "/repositories \{/a mavenLocal()" $BASEDIR/build.gradle
+cat $BASEDIR/build.gradle
+sed -i'.orig' -E "/repositories/a mavenLocal" $BASEDIR/build.gradle
+#sed -i'.orig' -E "/repositories \{/a mavenLocal()" $BASEDIR/build.gradle
+cat $BASEDIR/build.gradle
+exit 0
 sed -i'.orig' -E "s/include(.*)/include\1, ':aar-instrumented-tests'/g" $BASEDIR/settings.gradle
 
 DST=$BASEDIR/aar-instrumented-tests
