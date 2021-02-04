@@ -38,11 +38,11 @@ jobs:
       #          name: maven-local
       #          path: ~/.m2
 
-      - uses: ViliusSutkus89/setup-android@release
-
-      - run: sdkmanager emulator
-
-      - uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 30
-          script: ./gradlew aar-instrumented-tests:connectedCheck
+#      - uses: ViliusSutkus89/setup-android@release
+#
+#      - run: sdkmanager emulator
+#
+#      - uses: reactivecircus/android-emulator-runner@v2
+#        with:
+#          api-level: 30
+#          script: ./gradlew aar-instrumented-tests:connectedCheck
