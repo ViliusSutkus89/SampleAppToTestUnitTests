@@ -3,6 +3,11 @@ on:
   push:
     paths-ignore:
       - '.github/workflows/release.yml'
+
+    # Ignore tag push (publishing a release)
+    branches:
+      - '**'
+
 jobs:
   build:
     runs-on: ubuntu-20.04
