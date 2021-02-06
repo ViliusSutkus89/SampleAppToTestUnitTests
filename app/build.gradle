@@ -1,4 +1,10 @@
 version = '1.0.0'
+if (!project.hasProperty('PublicRelease')) {
+//    if (System.getenv('GITHUB_SHA')) {
+//        version += '-' + System.getenv('GITHUB_SHA')
+//    }
+    version += '-SNAPSHOT'
+}
 group = 'com.viliussutkus89'
 
 apply plugin: 'com.android.library'
@@ -59,8 +65,7 @@ publishing {
             name = "GitHubPackages"
             url = "https://maven.pkg.github.com/ViliusSutkus89/SampleAppToTestUnitTests"
             credentials {
-//                username = System.getenv("GITHUB_ACTOR")
-                username = 'ViliusSutkus89'
+                username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
             }
         }

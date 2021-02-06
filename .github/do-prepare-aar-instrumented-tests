@@ -4,29 +4,23 @@ set -eu
 ###########################
 ######## CONFIG ###########
 ###########################
-SOURCE_PROJ=app
-GROUP_ID_ARTIFACT_ID="com.viliussutkus89:SampleAppToTestUnitTests"
-PACKAGE_ID="com.viliussutkus89.sampleapptotestunittests"
-PACKAGE_FOLDER_PATH="com/viliussutkus89/sampleapptotestunittests"
+GROUP_ID_ARTIFACT_ID='com.viliussutkus89:sampleapptotestunittests'
+PACKAGE_ID='com.viliussutkus89.sampleapptotestunittests'
+PACKAGE_FOLDER_PATH='com/viliussutkus89/sampleapptotestunittests'
 ###########################
 ##### ~~~CONFIG~~~ ########
 ###########################
 
-brew install gnu-sed
-PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
-
 BASEDIR=$(dirname "$0")/..
 cd $BASEDIR
 
-echo "Updating top level settings.gradle"
-sed -i -E "s/include(.*)/include\1, ':aar-instrumented-tests'/g" ./settings.gradle
-#@TODO: STAGING
-cat ./settings.gradle
+if [ "$(uname)" == "Darwin" ]
+then
+  brew install gnu-sed
+  PATH="/usr/local/opt/gnu-sed/libexec/gnubin:$PATH"
+fi
 
-echo "Updating top level build.gradle"
-sed -i -E "s/repositories \{/repositories \{\nmavenLocal()/g" ./build.gradle
-#@TODO: STAGING
-cat ./build.gradle
+VERSION="$(./getVersion)-${GITHUB_SHA}-SNAPSHOT"
 
 DST=./aar-instrumented-tests
 function copy() {
@@ -34,25 +28,46 @@ function copy() {
   local DST_DIR=$DST/$(dirname $TARGET)
 
   mkdir -p $DST_DIR
-  cp -r ./$SOURCE_PROJ/$TARGET $DST_DIR/
+  cp -r $TARGET $DST_DIR/
 }
 
-copy build.gradle
-echo "Updating module level build.gradle"
-sed -i -E "s/dependencies \{/dependencies \{\n implementation '${GROUP_ID_ARTIFACT_ID}:+'/g" $DST/build.gradle
-#@TODO: STAGING
-cat $DST/build.gradle
+function link() {
+  local TARGET=$1
+  local DST_DIR=$DST/$(dirname $TARGET)
 
-copy src/main/AndroidManifest.xml
-echo "Updating AndroidManifest.xml"
-sed -i -E "s/package\=\"(.*)\"/package\=\"\1.aarinstrumentedtests\"/g" $DST/src/main/AndroidManifest.xml
-#@TODO: STAGING
-cat $DST/src/main/AndroidManifest.xml
+  mkdir -p $DST_DIR
+  ln -s ../$TARGET $DST/$TARGET
+}
 
-copy src/androidTest
-echo "Updating java files"
-find $DST/src/androidTest -type f -name '*.java' -exec sed -i -E "s/package (.*)\;/package \1.aarinstrumentedtests\;\nimport \1\.\*\;/g" {} \;
-find $DST/src/androidTest -type f -name '*.java' -exec cat {} \;
+function copyAndSed() {
+  local TARGET=$1
+  local EXPRESSION=$2
 
-mkdir $DST/src/androidTest/java/$PACKAGE_FOLDER_PATH/aarinstrumentedtests
-find $DST/src/androidTest/java/$PACKAGE_FOLDER_PATH -type f -name '*.java' -exec mv {} $DST/src/androidTest/java/$PACKAGE_FOLDER_PATH/aarinstrumentedtests/ \;
+  copy $TARGET
+  echo "sed updating $DST/$TARGET - $EXPRESSION"
+  sed -E "$EXPRESSION" -i $DST/$TARGET
+
+  #@TODO: STAGING
+  cat $DST/$TARGET
+  echo ""
+  echo ""
+}
+
+link gradle
+link gradle.properties
+#link local.properties
+link gradlew
+
+copy settings.gradle
+
+copyAndSed build.gradle 's/repositories \{/repositories \{\nmavenLocal()/g'
+copyAndSed app/build.gradle "s/dependencies \{/dependencies \{\nimplementation '${GROUP_ID_ARTIFACT_ID}:${VERSION}'/g"
+copyAndSed app/src/main/AndroidManifest.xml 's/package\="(.*)"/package\="\1.aarinstrumentedtests"/g'
+
+copy app/src/androidTest
+echo 'Updating java files'
+find $DST/app/src/androidTest -type f -name '*.java' -exec sed -i -E 's/package (.*)\;/package \1.aarinstrumentedtests\;\nimport \1\.\*\;/g' {} \;
+find $DST/app/src/androidTest -type f -name '*.java' -exec cat {} \;
+
+mkdir $DST/app/src/androidTest/java/$PACKAGE_FOLDER_PATH/aarinstrumentedtests
+find $DST/app/src/androidTest/java/$PACKAGE_FOLDER_PATH -type f -name '*.java' -exec mv {} $DST/app/src/androidTest/java/$PACKAGE_FOLDER_PATH/aarinstrumentedtests/ \;
