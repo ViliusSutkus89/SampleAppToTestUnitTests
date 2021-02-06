@@ -1,4 +1,4 @@
-version = '1.0.1'
+version = '1.0.2'
 if (!project.hasProperty('PublicRelease')) {
 //    if (System.getenv('GITHUB_SHA')) {
 //        version += '-' + System.getenv('GITHUB_SHA')
