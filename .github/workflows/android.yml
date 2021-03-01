@@ -18,7 +18,7 @@ jobs:
         with:
           java-version: 1.8
 
-      - uses: ViliusSutkus89/setup-android@release
+      - uses: ViliusSutkus89/setup-android@v2.0.3-rc1
 
       - run: ./gradlew assembleRelease
 
@@ -56,7 +56,7 @@ jobs:
         with:
           java-version: 1.8
 
-      - uses: ViliusSutkus89/setup-android@release
+      - uses: ViliusSutkus89/setup-android@v2.0.3-rc1
 
       - run: sdkmanager "system-images;android-${{ matrix.api-level }};${{ matrix.target }};${{ matrix.arch }}"
 
